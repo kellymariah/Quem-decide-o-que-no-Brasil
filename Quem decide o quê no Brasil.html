@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Quem decide o quê no Brasil?</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+:root{--bg:#07030F;--ink:#F3EEFF;--muted:#C9BBEE;--card:#150B2B;--line:#3D2470;--accent:#FFC93C;--f1:#7C3AED;--f2:#A21CAF;--f3:#BE185D;--focus:#FFC93C;--okbg:#0F4A3D;--okink:#E2FFF6;--nobg:#5B2020;--noink:#FFE7E4;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+:root[data-theme="light"]{--bg:#F5F0FF;--ink:#1A0B33;--muted:#5B4A85;--card:#fff;--line:#DACBF5;--focus:#1A0B33;--okbg:#D7F5EA;--okink:#08382E;--nobg:#FFE3E0;--noink:#5B1410;color-scheme:light}
+html{scroll-padding-top:env(safe-area-inset-top,0px);font-size:100%}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-size:1.125rem;line-height:1.6}
+.wrap{max-width:72rem;margin:0 auto;padding:1.25rem clamp(1.25rem,4vw,3rem) 3rem}
+.skip{position:absolute;left:-999px;top:0;background:var(--accent);color:#1A0B33;padding:.6rem 1rem;z-index:9;font-weight:700}
+.skip:focus{left:.5rem;top:.5rem}
+.tools{display:flex;justify-content:flex-end;gap:.5rem}
+button{font:inherit;cursor:pointer}
+.tools button{background:var(--card);color:var(--ink);border:2px solid var(--line);border-radius:999px;padding:.15rem .9rem;font-weight:700}
+h1{font-size:clamp(2.3rem,9vw,3.8rem);line-height:1.05;margin:1.25rem 0 .75rem;letter-spacing:-.02em}
+h2{font-size:clamp(1.6rem,5vw,2.2rem);line-height:1.15;margin:3.5rem 0 .75rem}
+h3{font-size:1.25rem;margin:0 0 .25rem}
+p{margin:0 0 1rem;max-width:62ch}
+.lead{font-size:1.25rem}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--focus);outline-offset:3px}
+sup a{font-weight:700;text-decoration:none;padding:0 .1rem}
+.predio{display:grid;gap:1.5rem;margin-top:1.5rem}
+@media(min-width:44rem){.predio{grid-template-columns:18rem 1fr;align-items:start}}
+.roof{height:1.75rem;background:var(--ink);clip-path:polygon(50% 0,100% 100%,0 100%);margin:0 .5rem -1px}
+.floor{position:relative;display:block;width:100%;text-align:left;color:#fff;border:4px solid transparent;border-radius:6px;padding:.9rem 1rem 2.2rem;font-weight:700;font-size:1.3rem;line-height:1.2;margin:0 0 4px;transition:border-color .2s}
+.floor small{display:block;font-weight:400;font-size:.95rem;margin-top:.2rem}
+.floor::after{content:"";position:absolute;right:.9rem;bottom:.7rem;width:45%;height:.9rem;border-radius:3px;background:repeating-linear-gradient(90deg,rgba(255,255,255,.35) 0 .8rem,transparent .8rem 1.5rem)}
+.floor[aria-selected=true]{border-color:var(--accent)}
+.floor[aria-selected=true] .nm::before{content:"\25B8  "}
+.floor[data-k=pais]{background:var(--f1)}
+.floor[data-k=estado]{background:var(--f2)}
+.floor[data-k=cidade]{background:var(--f3)}
+.base{height:.6rem;background:var(--ink);border-radius:0 0 6px 6px}
+.sub{font-weight:700;font-size:1.15rem}
+#painel,.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,22rem),1fr));gap:1rem;align-content:start}
+#painel>.sub,#painel>.nota{grid-column:1/-1;margin:0}
+#painel .cargo,.grid2 .cargo{margin:0}
+.grid2{margin:0 0 1rem}
+.grid2 .cargo:first-child{grid-column:1/-1}
+.cargo{background:var(--card);border:2px solid var(--line);border-left:8px solid var(--fc,var(--f3));border-radius:14px;padding:1rem 1.1rem;margin:0 0 1rem}
+.mand{display:inline-block;background:var(--accent);color:#1A0B33;border-radius:999px;padding:.05rem .75rem;font-size:.95rem;font-weight:700;margin:0 0 .6rem}
+.dia{background:var(--bg);border-radius:10px;padding:.5rem .75rem;margin:0}
+.nota{color:var(--muted);font-size:1rem}
+.poderes{display:grid;gap:1rem;margin-top:1.25rem}
+@media(min-width:44rem){.poderes{grid-template-columns:repeat(3,1fr)}}
+.poder{background:var(--card);border:2px solid var(--line);border-top:8px solid var(--accent);border-radius:14px;padding:1rem}
+.poder .em{font-size:2rem;line-height:1}
+.poder p{margin:0}
+.quiz{background:var(--card);border:2px solid var(--line);border-radius:20px;padding:1.25rem;margin-top:1rem}
+.opts{display:flex;flex-wrap:wrap;gap:.6rem;margin:1rem 0}
+.opts button{flex:1 1 9rem;background:var(--card);color:var(--ink);border:3px solid var(--line);border-radius:12px;padding:.7rem;font-weight:700}
+.opts button:disabled{cursor:default;opacity:1;color:var(--ink)}
+.opts button.ok{background:var(--okbg);color:var(--okink);border-color:#0F7A66}
+.opts button.no{background:var(--nobg);color:var(--noink);border-color:#C92A2A}
+.next{background:var(--accent);color:#1A0B33;border:0;border-radius:999px;padding:.55rem 1.3rem;font-weight:700;margin-left:.4rem}
+.porque p{border-left:6px solid var(--accent);padding-left:1rem}
+.go{display:inline-block;background:var(--accent);color:#1A0B33;border-radius:999px;padding:.4rem 1.1rem;font-weight:700;text-decoration:none;margin:.2rem .5rem .2rem 0}
+.go:hover{text-decoration:underline}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.passos{margin:0 0 1rem;padding-left:1.4rem}
+footer{margin-top:3rem;color:var(--muted);font-size:1rem}
+ol{padding-left:1.4rem}
+.menu{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--card);border:2px solid var(--line);border-radius:999px;margin:1rem 0 0;padding:.3rem}
+.menu ul{position:relative;list-style:none;margin:0;padding:0;display:flex;gap:.25rem;overflow-x:auto;scrollbar-width:none}
+.menu a{display:block;white-space:nowrap;padding:.35rem .9rem;border-radius:999px;text-decoration:none;font-weight:700;font-size:1rem}
+.menu a:hover{background:var(--bg)}
+.menu a[aria-current=true]{background:var(--accent);color:#1A0B33}
+h2{scroll-margin-top:5rem}
+@media(prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+.bg{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.bg span{position:absolute;border-radius:50%;opacity:.38;will-change:transform;animation:flutua 22s ease-in-out infinite alternate}
+.bg span:nth-child(1){width:22rem;height:22rem;left:-6rem;top:4%;background:radial-gradient(circle,var(--f1),transparent 70%)}
+.bg span:nth-child(2){width:18rem;height:18rem;right:-5rem;top:22%;background:radial-gradient(circle,#C084FC,transparent 70%);animation-duration:28s;animation-delay:-8s}
+.bg span:nth-child(3){width:20rem;height:20rem;left:15%;bottom:-6rem;background:radial-gradient(circle,var(--f2),transparent 70%);animation-duration:26s;animation-delay:-14s}
+.bg span:nth-child(4){width:14rem;height:14rem;right:10%;bottom:8%;background:radial-gradient(circle,var(--f3),transparent 70%);animation-duration:20s;animation-delay:-4s}
+.bg span:nth-child(5){width:12rem;height:12rem;left:45%;top:-3rem;background:radial-gradient(circle,#6D28D9,transparent 70%);animation-duration:24s;animation-delay:-11s}
+@keyframes flutua{from{transform:translate(0,0) scale(1)}50%{transform:translate(3rem,-2rem) scale(1.12)}to{transform:translate(-2rem,3rem) scale(.95)}}
+.wrap{position:relative;z-index:1}
+.bg .u{position:absolute;left:var(--x);top:var(--y);width:var(--s);height:var(--s);color:var(--c);opacity:.25;animation:brilha var(--d) ease-in-out infinite;animation-delay:var(--dl)}
+@keyframes brilha{0%,100%{opacity:.15;transform:scale(.8) rotate(0)}50%{opacity:.55;transform:scale(1.15) rotate(12deg)}}
+.paused .bg span,.paused .bg .u{animation-play-state:paused}
+:root[data-theme="light"] .bg span{opacity:.3}
+@media(prefers-reduced-motion:reduce){.floor{transition:none}.bg span{animation:none}.bg .u{animation:none}}
+</style>
+</head>
+<body>
+<a class="skip" href="#conteudo">Pular para o conteúdo</a>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><g id="brilho"><path fill="currentColor" d="M24 2Q26 22 46 24Q26 26 24 46Q22 26 2 24Q22 22 24 2Z"/></g></defs></svg>
+<div class="bg" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span>
+<svg class="u" viewBox="0 0 48 48" style="--x:43%;--y:21%;--s:1.2rem;--d:3s;--dl:-1s;--c:#FFC93C"><use href="#brilho"/></svg>
+<svg class="u" viewBox="0 0 48 48" style="--x:70%;--y:14%;--s:1.2rem;--d:3s;--dl:-8s;--c:#C084FC"><use href="#brilho"/></svg>
+<svg class="u" viewBox="0 0 48 48" style="--x:29%;--y:6%;--s:0.9rem;--d:6s;--dl:-1s;--c:#F5F0FF"><use href="#brilho"/></svg>
+<svg class="u" viewBox="0 0 48 48" style="--x:32%;--y:13%;--s:1.4rem;--d:3s;--dl:-1s;--c:#F472B6"><use href="#brilho"/></svg>
+<svg class="u" viewBox="0 0 48 48" style="--x:30%;--y:82%;--s:1.5rem;--d:3s;--dl:-6s;--c:#A78BFA"><use href="#brilho"/></svg>
+<svg class="u" viewBox="0 0 48 48" style="--x:8%;--y:30%;--s:0.9rem;--d:4s;--dl:-4s;--c:#F5F0FF"><use href="#brilho"/></svg>
+<svg class="u" viewBox="0 0 48 48" style="--x:55%;--y:20%;--s:1.4rem;--d:7s;--dl:-4s;--c:#FFC93C"><use href="#brilho"/></svg>
+<svg class="u" viewBox="0 0 48 48" style="--x:73%;--y:89%;--s:1.0rem;--d:7s;--dl:-3s;--c:#C084FC"><use href="#brilho"/></svg>
+<svg class="u" viewBox="0 0 48 48" style="--x:49%;--y:14%;--s:1.4rem;--d:3s;--dl:0s;--c:#F5F0FF"><use href="#brilho"/></svg>
+<svg class="u" viewBox="0 0 48 48" style="--x:81%;--y:28%;--s:1.3rem;--d:7s;--dl:-6s;--c:#F472B6"><use href="#brilho"/></svg>
+<svg class="u" viewBox="0 0 48 48" style="--x:42%;--y:61%;--s:1.4rem;--d:6s;--dl:-5s;--c:#A78BFA"><use href="#brilho"/></svg>
+<svg class="u" viewBox="0 0 48 48" style="--x:40%;--y:33%;--s:1.7rem;--d:8s;--dl:-3s;--c:#F5F0FF"><use href="#brilho"/></svg>
+<svg class="u" viewBox="0 0 48 48" style="--x:12%;--y:75%;--s:1.1rem;--d:6s;--dl:-5s;--c:#FFC93C"><use href="#brilho"/></svg>
+<svg class="u" viewBox="0 0 48 48" style="--x:95%;--y:59%;--s:1.1rem;--d:3s;--dl:-1s;--c:#C084FC"><use href="#brilho"/></svg>
+<svg class="u" viewBox="0 0 48 48" style="--x:67%;--y:55%;--s:1.0rem;--d:5s;--dl:-2s;--c:#F5F0FF"><use href="#brilho"/></svg>
+<svg class="u" viewBox="0 0 48 48" style="--x:64%;--y:55%;--s:0.8rem;--d:8s;--dl:-1s;--c:#F472B6"><use href="#brilho"/></svg>
+<svg class="u" viewBox="0 0 48 48" style="--x:73%;--y:75%;--s:1.7rem;--d:5s;--dl:-5s;--c:#A78BFA"><use href="#brilho"/></svg>
+<svg class="u" viewBox="0 0 48 48" style="--x:90%;--y:46%;--s:1.5rem;--d:7s;--dl:-7s;--c:#F5F0FF"><use href="#brilho"/></svg>
+<svg class="u" viewBox="0 0 48 48" style="--x:10%;--y:13%;--s:1.8rem;--d:6s;--dl:-1s;--c:#FFC93C"><use href="#brilho"/></svg>
+<svg class="u" viewBox="0 0 48 48" style="--x:9%;--y:91%;--s:1.1rem;--d:7s;--dl:-7s;--c:#C084FC"><use href="#brilho"/></svg>
+<svg class="u" viewBox="0 0 48 48" style="--x:38%;--y:93%;--s:1.2rem;--d:8s;--dl:-5s;--c:#F5F0FF"><use href="#brilho"/></svg>
+<svg class="u" viewBox="0 0 48 48" style="--x:4%;--y:61%;--s:1.2rem;--d:7s;--dl:-1s;--c:#F472B6"><use href="#brilho"/></svg>
+</div>
+<div class="wrap">
+<div class="tools" role="group" aria-label="Ajustes de leitura">
+<button id="anim" aria-pressed="false" aria-label="Pausar animação do fundo">⏸ Fundo</button>
+<button id="menos" aria-label="Diminuir texto">A-</button>
+<button id="mais" aria-label="Aumentar texto">A+</button>
+</div>
+
+<nav class="menu" aria-label="Seções da página"><ul>
+<li><a href="#s-andares">Andares</a></li>
+<li><a href="#s-funcoes">Funções</a></li>
+<li><a href="#s-desafio">Desafio</a></li>
+<li><a href="#s-importa">Por que importa</a></li>
+<li><a href="#s-onde">Onde pesquisar</a></li>
+<li><a href="#s-criancas">Crianças</a></li>
+<li><a href="#s-fontes">Fontes</a></li>
+</ul></nav>
+
+<main id="conteudo">
+<h1>Quem decide o quê no Brasil?</h1>
+<p class="lead">Um guia curto e sem juridiquês sobre as pessoas que a gente escolhe no voto e o que cada uma faz. Feito para crianças curiosas e para adultos que nunca tiveram isso explicado direito.</p>
+
+<h2 id="s-andares" style="margin-top:2rem">O Brasil é um prédio de três andares</h2>
+<p>Cada andar tem seus próprios chefes e suas próprias leis. Toque em um andar para ver quem manda lá.</p>
+
+<div class="predio">
+<div>
+<div class="roof" aria-hidden="true"></div>
+<div role="tablist" aria-label="Andares do Brasil" aria-orientation="vertical" id="andares">
+<button class="floor" role="tab" id="tab-pais" data-k="pais" aria-controls="painel"><span class="nm">País</span><small>Presidente, deputados federais e senadores</small></button>
+<button class="floor" role="tab" id="tab-estado" data-k="estado" aria-controls="painel"><span class="nm">Estado</span><small>Governador e deputados estaduais</small></button>
+<button class="floor" role="tab" id="tab-cidade" data-k="cidade" aria-controls="painel"><span class="nm">Cidade</span><small>Prefeito e vereadores</small></button>
+</div>
+<div class="base" aria-hidden="true"></div>
+</div>
+<div id="painel" role="tabpanel" tabindex="0"></div>
+</div>
+<p class="nota" style="margin-top:1.5rem">Muita coisa é dividida entre os andares. Saúde e educação, por exemplo, têm partes nas três esferas.</p>
+
+<h2 id="s-funcoes">Dentro de cada andar, três funções</h2>
+<p>Pense num campeonato de futebol. Alguém escreve o regulamento, alguém organiza os jogos e alguém apita.</p>
+<div class="poderes">
+<div class="poder"><div class="em" aria-hidden="true">✍️</div><h3>Legislativo</h3><p><strong>Escreve as regras.</strong> Vereadores, deputados e senadores criam as leis e aprovam o orçamento, que é o plano de gastos do dinheiro público.</p></div>
+<div class="poder"><div class="em" aria-hidden="true">🛠️</div><h3>Executivo</h3><p><strong>Faz acontecer.</strong> Prefeitos, governadores e o presidente colocam as leis em prática e cuidam dos serviços públicos.</p></div>
+<div class="poder"><div class="em" aria-hidden="true">⚖️</div><h3>Judiciário</h3><p><strong>Confere se seguiram as regras.</strong> Juízes e ministros resolvem conflitos e julgam quem descumpriu a lei. Eles não são escolhidos pelo voto.</p></div>
+</div>
+
+<h2 id="s-desafio">Desafio da Cidadania</h2>
+<p>Teste o que você aprendeu. Cada rodada sorteia 10 perguntas e explica cada resposta.</p>
+<div class="quiz" id="quiz"></div>
+
+<h2 id="s-importa">Por que escolher bem cada cargo?</h2>
+<div class="porque">
+<p><strong>Senador não é enfeite.</strong> Ele faz leis, ajuda a decidir quem vira ministro do Supremo e participa do julgamento do presidente em casos de impeachment.</p>
+<p><strong>Governador mexe no seu dia a dia.</strong> Polícia, escolas de ensino médio e hospitais do estado dependem do governo estadual.</p>
+<p><strong>Vereadores e deputados decidem para onde vai o dinheiro.</strong> Eles aprovam o orçamento, ou seja, quanto vai para saúde, escola, transporte e o resto.</p>
+<p><strong>Quem não escolhe deixa outras pessoas escolherem por você.</strong> Cada cargo mexe em uma parte diferente da sua vida.</p>
+</div>
+
+<h2 id="s-onde">Onde procurar candidatos e propostas</h2>
+<p>Antes de votar, dá para conferir quem está concorrendo, o que promete e quem paga a campanha. Tudo em canais oficiais e gratuitos.<sup><a href="#f5" aria-label="Fonte 5">5</a></sup></p>
+
+<div class="grid2">
+<article class="cargo" style="--fc:var(--accent)">
+<h3>DivulgaCandContas (TSE)</h3>
+<p>É o principal. Mostra número, partido, situação do registro e bens declarados. Também mostra quanto cada campanha arrecadou e gastou.<sup><a href="#f5" aria-label="Fonte 5">5</a></sup></p>
+<ol class="passos">
+<li>Abra o site e escolha o cargo e o estado (ou a cidade).</li>
+<li>Toque no nome da pessoa candidata.</li>
+<li>Confira partido, bens, propostas e contas da campanha.</li>
+</ol>
+<p class="dia"><strong>Atenção:</strong> o plano de governo costuma aparecer só para cargos do Executivo, como presidente e governador.<sup><a href="#f6" aria-label="Fonte 6">6</a></sup> Para deputados e senadores, vale olhar o histórico e as redes sociais informadas na candidatura.</p>
+<p style="margin:.75rem 0 0"><a class="go" href="https://divulgacandcontas.tse.jus.br/divulga/#/home" target="_blank" rel="noopener">Abrir DivulgaCandContas<span class="sr"> (abre em nova aba)</span></a></p>
+</article>
+
+<article class="cargo" style="--fc:var(--accent)">
+<h3>Para quem gosta de dados</h3>
+<p>O Portal de Dados Abertos reúne bases brutas para baixar, com informações de eleições desde 1933. As Estatísticas Eleitorais têm painéis interativos para comparar candidaturas, resultados e mais.<sup><a href="#f5" aria-label="Fonte 5">5</a></sup></p>
+<p style="margin:0"><a class="go" href="https://dadosabertos.tse.jus.br/" target="_blank" rel="noopener">Dados Abertos<span class="sr"> (abre em nova aba)</span></a><a class="go" href="https://sig.tse.jus.br/ords/dwapr/seai/r/sig-eleicao" target="_blank" rel="noopener">Estatísticas<span class="sr"> (abre em nova aba)</span></a></p>
+</article>
+
+<article class="cargo" style="--fc:var(--accent)">
+<h3>O que já fizeram no mandato</h3>
+<p>Quem já é deputado ou senador e quer continuar deixa rastro nos sites da Câmara e do Senado. Em geral, dá para ver projetos apresentados e votações.</p>
+<p style="margin:0"><a class="go" href="https://www.camara.leg.br" target="_blank" rel="noopener">Câmara dos Deputados<span class="sr"> (abre em nova aba)</span></a><a class="go" href="https://www.senado.leg.br" target="_blank" rel="noopener">Senado Federal<span class="sr"> (abre em nova aba)</span></a></p>
+</article>
+
+<article class="cargo" style="--fc:var(--accent)">
+<h3>Onde eu voto?</h3>
+<p>Consulte seu local de votação no site do TSE ou no aplicativo e-Título.</p>
+<p style="margin:0"><a class="go" href="https://www.tse.jus.br/servicos-eleitorais/local-de-votacao-zonas-eleitorais" target="_blank" rel="noopener">Local de votação<span class="sr"> (abre em nova aba)</span></a><a class="go" href="https://www.tse.jus.br/servicos-eleitorais/servicos/aplicativo-e-titulo" target="_blank" rel="noopener">e-Título<span class="sr"> (abre em nova aba)</span></a></p>
+</article>
+
+<article class="cargo" style="--fc:var(--accent)">
+<h3>Recebeu algo estranho no zap?</h3>
+<p>Antes de repassar, confira na fonte oficial. Se achar que é desinformação, o TSE explica como denunciar.</p>
+<p style="margin:0"><a class="go" href="https://www.tse.jus.br/comunicacao/noticias/2026/Setembro/encontrou-desinformacao-sobre-as-eleicoes-saiba-como-denunciar-ao-tse" target="_blank" rel="noopener">Como denunciar<span class="sr"> (abre em nova aba)</span></a></p>
+</article>
+
+</div>
+
+<p><strong>Dica de detetive:</strong> proposta boa cabe no cargo. Se um prefeito promete mudar a Constituição, por exemplo, desconfie. Isso é assunto do Congresso.</p>
+
+<h2 id="s-criancas">E criança, pode participar?</h2>
+<p>Pode, sim. Dá para conversar em casa, fazer perguntas e acompanhar o que quem foi eleito promete e faz.</p>
+<p>O voto é opcional aos 16 e 17 anos e depois dos 70. Dos 18 aos 70 é obrigatório. Também é opcional para quem não sabe ler e escrever.<sup><a href="#f2" aria-label="Fonte 2">2</a></sup></p>
+</main>
+
+<footer>
+<p>Este guia explica como o sistema funciona. Ele não diz em quem votar.</p>
+<h2 id="s-fontes" style="font-size:1.3rem;margin:1.5rem 0 .5rem">Fontes</h2>
+<ol>
+<li id="f1"><a href="https://www.planalto.gov.br" target="_blank" rel="noopener">Constituição da República Federativa do Brasil de 1988 (Planalto)</a></li>
+<li id="f2"><a href="https://www.tse.jus.br" target="_blank" rel="noopener">Tribunal Superior Eleitoral (TSE)</a></li>
+<li id="f3"><a href="https://www.camara.leg.br" target="_blank" rel="noopener">Câmara dos Deputados</a></li>
+<li id="f4"><a href="https://www.senado.leg.br" target="_blank" rel="noopener">Senado Federal</a></li>
+<li id="f5"><a href="https://www.tse.jus.br/comunicacao/noticias/2026/Setembro/faltam-20-dias-onde-consultar-informacoes-sobre-candidatas-e-candidatos" target="_blank" rel="noopener">TSE, "Faltam 20 dias: onde consultar informações sobre candidatas e candidatos" (14/09/2026)</a></li>
+<li id="f6"><a href="https://www.tre-pe.jus.br/comunicacao/noticias/2026/Agosto/saiba-como-acompanhar-processos-e-registros-de-candidaturas-pela-internet" target="_blank" rel="noopener">TRE-PE, "Saiba como acompanhar processos e registros de candidaturas pela internet" (agosto de 2026)</a></li>
+</ol>
+<p>Regras e números podem mudar. Vale conferir nos sites oficiais. Feito por <a href="https://kellymariah.me/">Kelly Mariah Batista </a></p>
+</footer>
+</div>
+
+<script>
+const s=n=>'<sup><a href="#f'+n+'" aria-label="Fonte '+n+'">'+n+'</a></sup>';
+const F={
+cidade:{cor:"var(--f3)",sub:"O andar mais perto de você. Aqui as decisões chegam na sua rua.",cargos:[
+["Prefeito/a","4 anos","Administra a cidade: postos de saúde, creches, escolas do ensino fundamental, ônibus, limpeza e conserto de ruas.","O buraco da sua rua e a merenda da escola."],
+["Vereador/a","4 anos","Cria as leis da cidade, aprova o orçamento da prefeitura e fiscaliza o prefeito.","Uma lei que limita barulho alto de madrugada."]],
+nota:"As eleições da cidade acontecem em anos diferentes das eleições de estado e país."},
+estado:{cor:"var(--f2)",sub:"O andar do meio. Decisões que valem para o estado inteiro.",cargos:[
+["Governador/a","4 anos","Comanda o governo do estado: polícia militar e civil, escolas de ensino médio, hospitais grandes e estradas estaduais.","A viatura da polícia e a escola onde muita gente faz o ensino médio."],
+["Deputado/a estadual","4 anos","Faz as leis do estado, aprova o orçamento estadual e fiscaliza o governador. Trabalha na Assembleia Legislativa.","Regras para serviços e estradas do estado."]],
+nota:"No Distrito Federal, o cargo se chama deputado/a distrital, e o governo do DF cuida de tarefas de estado e de cidade ao mesmo tempo."},
+pais:{cor:"var(--f1)",sub:"O andar de cima. Decisões que valem para o Brasil inteiro.",cargos:[
+["Presidente","4 anos, com uma reeleição possível"+s(1),"Comanda o governo federal: escolhe os ministros de governo (como o da Saúde), cuida das Forças Armadas, das relações com outros países e de programas nacionais.","As campanhas nacionais de vacinação."],
+["Deputado/a federal","4 anos","São 513 deputados"+s(3)+". Estados com mais gente têm mais vagas. Eles fazem as leis do país, aprovam o orçamento federal e fiscalizam o governo.","Uma lei que muda regras para o país todo."],
+["Senador/a","8 anos","São 81 senadores"+s(4)+": 3 por estado e 3 pelo Distrito Federal, todos com o mesmo peso. Fazem leis, aprovam quem o presidente indica para o Supremo e participam do julgamento do presidente em casos de impeachment"+s(1)+". A cada eleição, o Senado renova um terço ou dois terços das vagas.","Decidir se uma pessoa indicada pode virar ministro do Supremo."]],
+nota:"A Câmara dos Deputados e o Senado juntos formam o Congresso Nacional."}
+};
+const ordem=["pais","estado","cidade"],tabs=[...document.querySelectorAll("[role=tab]")],painel=document.getElementById("painel");
+function show(k){const f=F[k];
+tabs.forEach(t=>{const on=t.dataset.k===k;t.setAttribute("aria-selected",on);t.tabIndex=on?0:-1});
+painel.setAttribute("aria-labelledby","tab-"+k);painel.style.setProperty("--fc",f.cor);
+painel.innerHTML='<p class="sub">'+f.sub+'</p>'+f.cargos.map(c=>'<article class="cargo"><h3>'+c[0]+'</h3><p class="mand">Mandato: '+c[1]+'</p><p>'+c[2]+'</p><p class="dia"><strong>No dia a dia:</strong> '+c[3]+'</p></article>').join("")+'<p class="nota">'+f.nota+'</p>'}
+tabs.forEach(t=>{t.onclick=()=>show(t.dataset.k);
+t.onkeydown=e=>{const d={ArrowDown:1,ArrowRight:1,ArrowUp:-1,ArrowLeft:-1}[e.key];if(!d)return;e.preventDefault();
+const n=ordem[(ordem.indexOf(t.dataset.k)+d+3)%3];show(n);document.getElementById("tab-"+n).focus()}});
+show("cidade");
+
+const B=[
+["Quem escreve as leis do país?","O Congresso Nacional","O Supremo Tribunal Federal","O presidente sozinho","A Câmara e o Senado juntos formam o Congresso, que faz as leis federais."],
+["Qual poder julga quem descumpriu a lei?","O Judiciário","O Legislativo","O Executivo","Juízes e tribunais julgam e resolvem conflitos."],
+["Qual poder coloca as leis em prática e administra o governo?","O Executivo","O Judiciário","O Legislativo","Prefeitos, governadores e o presidente fazem parte dele."],
+["Quantos anos dura o mandato de prefeito?","4 anos","2 anos","6 anos","8 anos","Prefeito, governador e presidente têm mandato de 4 anos."],
+["Quantos anos dura o mandato de senador?","8 anos","4 anos","6 anos","2 anos","É o mandato mais longo entre os cargos eleitos."],
+["Quantos senadores cada estado tem?","3","2","5","10","Cada estado e o Distrito Federal têm 3 senadores, num total de 81."],
+["Quantos deputados federais existem?","513","81","27","1.000","Estados com mais gente têm mais deputados."],
+["Quem comanda o governo de um estado?","O governador","O prefeito","O senador","Cada estado tem um governador eleito a cada 4 anos."],
+["Quem cria as leis da cidade?","Os vereadores","Os deputados federais","O governador","Eles trabalham na Câmara Municipal."],
+["Onde trabalham os deputados estaduais?","Na Assembleia Legislativa","Na Câmara Municipal","No Senado Federal","Ali eles fazem as leis do estado."],
+["Como se chama o conjunto da Câmara dos Deputados com o Senado?","Congresso Nacional","Supremo Tribunal","Palácio do Planalto","O Congresso é o Legislativo federal."],
+["Quem fiscaliza o prefeito?","Os vereadores","O governador","O presidente","Fiscalizar a prefeitura é um dos papéis da Câmara Municipal."],
+["Juízes e ministros do Supremo são escolhidos pelo voto?","Não, não são eleitos","Sim, como os deputados","Sim, só nas capitais","Juízes entram por concurso e ministros do Supremo por indicação."],
+["Quem indica os ministros do Supremo?","O presidente da República","Os governadores","Os prefeitos","O Senado analisa e vota a indicação."],
+["A partir de que idade o voto é obrigatório?","18 anos","16 anos","21 anos","Aos 16 e 17 anos o voto é opcional."],
+["Com que idade já dá para votar, se a pessoa quiser?","16 anos","12 anos","14 anos","É preciso ter o título de eleitor."],
+["Depois de que idade o voto volta a ser opcional?","70 anos","60 anos","65 anos","Quem passa dos 70 não é obrigado a votar."],
+["O que é o e-Título?","O título de eleitor no aplicativo do celular","Um partido político","Uma urna eletrônica nova","É um aplicativo da Justiça Eleitoral."],
+["Quem organiza as eleições no Brasil?","A Justiça Eleitoral","O Congresso","A Polícia Federal","O TSE e os tribunais regionais eleitorais cuidam disso."],
+["Quem cuida do buraco na rua do seu bairro?","O prefeito","O governador","O presidente","Ruas da cidade são assunto da prefeitura."],
+["Quem comanda a Polícia Militar do estado?","O governador","O prefeito","O presidente","As polícias estaduais respondem ao governo do estado."],
+["Quem é o comandante supremo das Forças Armadas?","O presidente","O governador","O prefeito","Exército, Marinha e Aeronáutica respondem ao presidente."],
+["Em geral, quem cuida das escolas públicas de ensino médio?","O governo do estado","A prefeitura","O Congresso","O ensino fundamental fica mais com as prefeituras."],
+["Em geral, quem cuida dos ônibus dentro da cidade?","A prefeitura","O governo federal","O Supremo","O transporte coletivo urbano é, em geral, da prefeitura."],
+["O que é o orçamento público?","O plano de como o dinheiro público será gasto","Um tipo de imposto","Uma lei que proíbe gastos","O Executivo propõe e o Legislativo aprova."],
+["De onde vem a maior parte do dinheiro público?","Dos impostos","De doações de políticos","Da impressão de dinheiro novo","Quem paga impostos financia os serviços públicos."],
+["O que é uma lei?","Uma regra que vale para todo mundo","Uma opinião do presidente","Uma sugestão que ninguém precisa seguir","Todos devem cumprir, inclusive quem governa."],
+["O que é um partido político?","Um grupo de pessoas com ideias parecidas que disputa eleições","Uma empresa do governo","Um tribunal","Ele reúne filiados e lança candidaturas."],
+["Quando há segundo turno na eleição para presidente?","Quando ninguém passa de metade dos votos válidos","Sempre","Só se o Supremo decidir","Os dois mais votados disputam de novo."],
+["Qual destes cargos é do Poder Executivo?","Prefeito","Vereador","Senador","Vereadores e senadores são do Legislativo."],
+["Qual destes cargos é do Poder Legislativo?","Deputado estadual","Governador","Presidente","Governador e presidente são do Executivo."],
+["Quem pode sancionar (aprovar) ou vetar uma lei do Congresso?","O presidente","O prefeito","Um juiz","Vetar é dizer não. Mesmo assim, o Congresso pode derrubar o veto."],
+["O que é impeachment?","Um processo que pode tirar do cargo quem cometeu crime de responsabilidade","Um tipo de eleição","Uma lei nova","No caso do presidente, a Câmara autoriza e o Senado julga."],
+["Em que ano foi promulgada a Constituição atual do Brasil?","1988","1964","2000","Ela é a lei mais importante do país."],
+["Qual é a capital do Brasil, onde ficam os três poderes federais?","Brasília","Rio de Janeiro","São Paulo","Ali ficam Executivo, Legislativo e Judiciário federais."],
+["Quantos estados o Brasil tem?","26, mais o Distrito Federal","12","50","Ao todo são 27 unidades da federação."],
+["O DivulgaCandContas serve para...","consultar candidaturas, bens e propostas","votar pela internet","pagar multa de trânsito","É um sistema do TSE aberto a qualquer pessoa."],
+["O que ajuda a escolher melhor em quem votar?","Conferir propostas e histórico em fontes oficiais","Votar em quem tem mais santinhos","Escolher o nome mais bonito","Informação confiável faz diferença."],
+["Um prefeito pode mudar a Constituição sozinho?","Não, isso cabe ao Congresso","Sim, é só assinar","Sim, se os vereadores concordarem","Mudar a Constituição é assunto do Congresso Nacional."],
+["Quantas reeleições seguidas o presidente pode ter?","Uma","Nenhuma","Quantas quiser","A Constituição permite uma reeleição para o período seguinte."],
+["De quanto em quanto tempo acontecem as eleições gerais?","A cada 4 anos","A cada 2 anos","A cada 8 anos","Elas escolhem presidente, governador, deputados e senadores."],
+["Quando acontecem as eleições de prefeito e vereador?","Em anos diferentes das eleições gerais","No mesmo dia das gerais","Só quando o prefeito renuncia","Elas ficam dois anos depois das gerais."],
+["O que faz um ministro de Estado, como o da Saúde?","Ajuda o presidente a administrar uma área do governo","Julga processos","Cria leis sozinho","O presidente escolhe os ministros de governo."],
+["No Senado, todos os estados têm o mesmo peso?","Sim, 3 senadores por estado","Não, os maiores têm mais","Não, os menores têm mais","O Senado representa os estados de forma igual."],
+["Quantos ministros tem o Supremo Tribunal Federal?","11","5","27","81","São 11 ministros."],
+["Qual é a principal função do Supremo Tribunal Federal?","Guardar a Constituição","Fazer leis","Comandar a polícia","Ele decide se leis e atos respeitam a Constituição."],
+["O que faz um juiz?","Aplica as leis e julga casos","Escreve as leis","Administra a cidade","Juízes fazem parte do Poder Judiciário."],
+["O que é o Ministério Público?","Uma instituição que defende a lei e a sociedade","Um partido político","Um ministério do presidente","Promotores e procuradores podem, por exemplo, acusar quem comete crimes."],
+["A Defensoria Pública serve para...","dar assistência jurídica gratuita a quem não pode pagar advogado","cobrar impostos","organizar eleições","Ela ajuda a garantir acesso à Justiça."],
+["Quem é ao mesmo tempo chefe de Estado e chefe de governo no Brasil?","O presidente da República","O presidente do Senado","Um ministro do Supremo","Isso acontece no presidencialismo."],
+["Que tipo de governo o Brasil tem?","República presidencialista","Monarquia","Ditadura","Os governantes são eleitos e têm mandato."],
+["O que é uma república?","Um país em que os governantes são eleitos por tempo limitado","Um país governado por um rei","Um país sem leis","No Brasil, os mandatos têm prazo definido."],
+["O que é democracia?","Governo em que o povo participa das decisões, em geral pelo voto","Governo de uma pessoa só","Governo escolhido por sorteio","Na democracia, o poder vem do povo."],
+["O que significa federação?","Estados e cidades têm certa autonomia dentro do mesmo país","O país é dividido em reinos","Só a capital toma decisões","No Brasil, União, estados e municípios têm cada um suas tarefas."],
+["O que faz o vice-presidente?","Substitui o presidente quando ele falta ou sai","Comanda a Câmara","Julga processos","Presidente e vice são eleitos na mesma chapa."],
+["Se o prefeito sair no meio do mandato, quem assume em geral?","O vice-prefeito","O governador","O vereador mais votado","Prefeito e vice são eleitos juntos."],
+["O voto no Brasil é...","Secreto","Público","Anunciado em voz alta","Ninguém pode obrigar você a contar em quem votou."],
+["Para que serve o número do candidato?","Para digitar na urna eletrônica","Para pagar impostos","Para contar a idade dele","Cada candidatura tem um número."],
+["Em que dia da semana acontecem as eleições no Brasil?","Domingo","Sábado","Quarta-feira","As votações costumam ser em domingos."],
+["O que é justificar o voto?","Avisar à Justiça Eleitoral que não deu para votar","Votar duas vezes","Trocar de título","Quem falta sem justificar pode ter de pagar multa."],
+["Para ser candidato no Brasil, é preciso ser filiado a...","Um partido político","Uma empresa","Um sindicato","Não existe candidatura sem partido."],
+["O que é propaganda eleitoral?","Divulgação de candidatos e propostas para pedir votos","A contagem dos votos","Uma multa","Ela precisa seguir as regras da Justiça Eleitoral."],
+["O que é o Boletim de Urna?","Um documento com o total de votos registrados naquela urna","Um jornal do bairro","O título de eleitor","Ele é impresso quando a votação termina."],
+["O que é a zerésima?","Um relatório impresso antes da votação mostrando que a urna está sem votos","O último voto do dia","Uma multa eleitoral","É um dos passos de segurança da urna."],
+["O que é um projeto de lei?","Uma proposta que ainda precisa ser votada","Uma lei já em vigor","Uma sentença de juiz","Só vira lei depois de aprovado e sancionado."],
+["Cidadãos comuns podem propor leis?","Sim, com apoio de assinaturas, nos casos previstos","Não, nunca","Só quem tem curso de Direito","Isso se chama iniciativa popular."],
+["O que é uma emenda constitucional?","Uma mudança no texto da Constituição","Uma lei da cidade","Uma decisão do prefeito","Ela exige uma votação especial no Congresso."],
+["O que é uma CPI?","Uma comissão que investiga um fato de interesse público","Um tipo de eleição","Um imposto","A sigla quer dizer Comissão Parlamentar de Inquérito."],
+["O que é um mandato?","O período em que a pessoa eleita exerce o cargo","Um tipo de lei","Um documento de identidade","Depois dele, é preciso ser eleito de novo."],
+["O que é reeleição?","Ser eleito de novo para o mesmo cargo","Uma eleição anulada","Trocar de partido","Prefeitos, governadores e presidente podem ter uma reeleição seguida."],
+["Quem escolhe o presidente da Câmara dos Deputados?","Os próprios deputados","O povo, no voto","O presidente da República","Ele é escolhido em votação entre os deputados."],
+["As rodovias com sigla BR, como a BR-116, são em geral responsabilidade de quem?","Do governo federal","Das prefeituras","Dos vereadores","As rodovias estaduais têm siglas como SP e MG."],
+["Quem emite o passaporte brasileiro?","A Polícia Federal","A Polícia Militar","A prefeitura","A Polícia Federal também cuida das fronteiras e de crimes federais."],
+["A Guarda Civil Municipal é ligada a quem?","À prefeitura","Ao governo do estado","Ao Supremo","Ela cuida, em geral, de bens e serviços do município."],
+["Quem mantém o SUS, o Sistema Único de Saúde?","Governo federal, estados e municípios juntos","Só a prefeitura","Só os planos de saúde","A saúde é uma tarefa dividida entre os três níveis."],
+["Quem cuida da coleta de lixo na cidade, em geral?","A prefeitura","O governo federal","O Senado","Serviços locais costumam ser municipais."],
+["Quem cuida dos postos de saúde do bairro, em geral?","A prefeitura","O presidente","O Supremo","É a chamada atenção básica."],
+["Quem cuida das universidades federais?","O governo federal","A prefeitura","O governo do estado","O nome já diz: federal."],
+["Quem cuida da defesa do país e das fronteiras?","O governo federal","As prefeituras","Os vereadores","A defesa nacional é tarefa da União."],
+["A Polícia Civil, que investiga crimes, é ligada a quem?","Ao governo do estado","À prefeitura","Ao Congresso","Ela responde ao governador."],
+["O IPTU, imposto sobre imóveis urbanos, é cobrado por quem?","Pela prefeitura","Pelo governo do estado","Pelo governo federal","É um imposto municipal."],
+["O IPVA, imposto sobre veículos, é cobrado por quem?","Pelo governo do estado","Pela prefeitura","Pelo governo federal","É um imposto estadual."],
+["O Imposto de Renda é cobrado por quem?","Pelo governo federal","Pela prefeitura","Pelo governo do estado","É um imposto federal."],
+["Quantos vereadores tem cada cidade?","Depende do tamanho da população","Sempre 10","Sempre 100","Cidades maiores têm mais vereadores."],
+["Quem escolhe os secretários da prefeitura?","O prefeito","Os vereadores","O Supremo","Secretários ajudam a cuidar de áreas como saúde e educação."],
+["Quem escolhe os secretários do estado?","O governador","O presidente","Os deputados federais","Eles ajudam a administrar áreas do governo estadual."],
+["O que é uma audiência pública?","Uma reunião aberta em que a população pode opinar","Um julgamento fechado","Uma eleição","Câmaras, prefeituras e o Congresso costumam realizá-las."],
+["O que é orçamento participativo?","Quando a população ajuda a decidir parte dos gastos","Quando o prefeito gasta sozinho","Um tipo de imposto","Algumas cidades adotam essa prática."],
+["O Portal da Transparência do governo federal serve para...","ver como o dinheiro público federal é gasto","comprar produtos","tirar o título de eleitor","É um site oficial de consulta pública."],
+["O que é a Lei de Acesso à Informação?","A lei que garante ao cidadão pedir informações públicas","Uma lei que proíbe notícias","Uma lei sobre a internet","Ela vale para órgãos públicos."],
+["O que é desinformação?","Informação falsa espalhada como se fosse verdadeira","Uma notícia antiga","Um erro de digitação","Antes de repassar, vale conferir em fontes confiáveis."],
+["O que é o ECA?","Uma lei que protege os direitos de crianças e adolescentes","Um partido político","Um imposto","O nome completo é Estatuto da Criança e do Adolescente."],
+["A Constituição diz que a saúde é...","Um direito de todos e dever do Estado","Um serviço só para quem paga","Uma escolha de cada prefeito","Por isso existe o SUS."],
+["A Constituição diz que a educação é...","Um direito de todos, dever do Estado e da família","Um favor do governo","Um serviço opcional","A escola pública gratuita faz parte disso."],
+["Em que ano o Brasil declarou independência?","1822","1500","1889","A independência foi declarada em 7 de setembro de 1822."],
+["Em que ano o Brasil virou república?","1889","1822","1988","A República foi proclamada em 15 de novembro de 1889."],
+["Em que ano as mulheres conquistaram o direito de votar no Brasil?","1932","1889","1988","O direito foi previsto no Código Eleitoral de 1932."],
+["Em que ano Brasília foi inaugurada?","1960","1930","1988","Antes disso, a capital era o Rio de Janeiro."],
+["Em que ano os brasileiros votaram para presidente pelo voto direto depois do período militar?","1989","1964","2002","Foi a primeira eleição direta para presidente em quase 30 anos."],
+["Em que ano a urna eletrônica foi usada pela primeira vez no Brasil?","1996","1960","2010","Em 2000 ela passou a ser usada em todo o país."],
+["O que é um município?","Uma cidade com governo próprio, com prefeito e vereadores","Uma região sem governo","Um tipo de estado","O Brasil tem milhares de municípios."],
+["De onde sai o salário de quem trabalha no governo?","Do dinheiro público, que vem principalmente dos impostos","Do bolso dos políticos","De prêmios de loteria","Por isso é importante acompanhar como o dinheiro é gasto."],
+["O que é o Diário Oficial?","Uma publicação em que o governo divulga leis e atos oficiais","Um jornal de fofocas","Uma rede social","Existem diários oficiais da União, dos estados e dos municípios."],
+["Para que serve o Tribunal de Contas?","Fiscalizar como o dinheiro público é gasto","Julgar crimes de trânsito","Organizar as eleições","Ele ajuda a checar as contas dos governos."]
+];
+const box=document.getElementById("quiz"),N=10;
+let deck=[],rod=[],cur=null,i=0,p=0;
+const sh=a=>{a=a.slice();for(let j=a.length-1;j>0;j--){const k=Math.floor(Math.random()*(j+1));[a[j],a[k]]=[a[k],a[j]]}return a};
+function intro(){box.innerHTML='<p class="lead"><strong>Pronto para o desafio?</strong></p><p>Cada rodada sorteia '+N+' perguntas de um banco com '+B.length+'. As perguntas não se repetem até o banco acabar.</p><button class="next" style="margin:0" data-a="start">Começar</button>'}
+function novo(){if(deck.length<N)deck=sh(B.map((_,x)=>x));rod=deck.splice(0,N).map(x=>B[x]);i=0;p=0;draw()}
+function draw(){
+if(i>=rod.length){const m=p>=9?"Craque da política!":p>=6?"Mandou bem!":p>=3?"Está no caminho.":"Vale reler o guia e tentar de novo.";
+box.innerHTML='<p class="lead"><strong>Você acertou '+p+' de '+rod.length+'.</strong> '+m+'</p><button class="next" style="margin:0" data-a="start">Nova rodada</button>';return}
+const q=rod[i];cur={c:q[1],o:sh(q.slice(1,-1)),e:q[q.length-1]};
+box.innerHTML='<p><strong>Pergunta '+(i+1)+' de '+rod.length+'.</strong> Acertos: '+p+'</p><p class="lead">'+q[0]+'</p><div class="opts">'+cur.o.map((o,k)=>'<button data-k="'+k+'">'+o+'</button>').join("")+'</div><p id="fb" role="status"></p>'}
+box.addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;
+if(b.dataset.a==="start"){novo();return}
+if(b.dataset.a==="next"){i++;draw();return}
+const k=+b.dataset.k,ok=cur.o[k]===cur.c;if(ok)p++;
+box.querySelectorAll(".opts button").forEach((x,j)=>{x.disabled=true;if(cur.o[j]===cur.c)x.classList.add("ok");else if(j===k)x.classList.add("no")});
+document.getElementById("fb").innerHTML='<strong>'+(ok?"Isso mesmo! ✓":"Quase! ✗")+'</strong> '+cur.e+' <button class="next" data-a="next">'+(i+1<rod.length?"Próxima":"Ver resultado")+'</button>';
+box.querySelector("[data-a=next]").focus()});
+intro();
+
+const links=[...document.querySelectorAll(".menu a")],secs=links.map(a=>document.querySelector(a.getAttribute("href")));
+const mark=k=>{links.forEach(a=>a.removeAttribute("aria-current"));const a=links[k],u=a.parentNode.parentNode;a.setAttribute("aria-current","true");u.scrollLeft=a.offsetLeft-u.clientWidth/2+a.offsetWidth/2};
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)mark(secs.indexOf(e.target))}),{rootMargin:"-15% 0px -65% 0px"});
+secs.forEach(x=>io.observe(x));
+addEventListener("scroll",()=>{if(innerHeight+scrollY>=document.documentElement.scrollHeight-4)mark(links.length-1)},{passive:true});
+mark(0);
+
+const sz=[100,115,130];let z=0;
+const setZ=n=>{z=Math.max(0,Math.min(2,n));document.documentElement.style.fontSize=sz[z]+"%"};
+document.getElementById("mais").onclick=()=>setZ(z+1);
+document.getElementById("menos").onclick=()=>setZ(z-1);
+const an=document.getElementById("anim");
+an.onclick=()=>{const p=document.documentElement.classList.toggle("paused");an.setAttribute("aria-pressed",p);an.textContent=p?"▶ Fundo":"⏸ Fundo";an.setAttribute("aria-label",p?"Retomar animação do fundo":"Pausar animação do fundo")};
+</script>
+</body>
+</html>
